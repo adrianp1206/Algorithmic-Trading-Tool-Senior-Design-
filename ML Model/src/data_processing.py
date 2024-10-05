@@ -1,6 +1,6 @@
 import yfinance as yf
-import talib
 import pandas as pd 
+import os
 
 def fetch_tsla_data(start_date='2015-01-01', end_date='2024-01-01'):
     """
@@ -36,6 +36,7 @@ def save_data_to_csv(df, filename='tsla_data.csv'):
     df: DataFrame, The data to save.
     filename: str, The name of the file to save the data to.
     """
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     df.to_csv(filename)
     print(f"Data saved to {filename}")
 

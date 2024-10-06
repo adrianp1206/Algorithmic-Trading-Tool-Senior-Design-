@@ -52,4 +52,38 @@ def load_data_from_csv(filename='tsla_data.csv'):
     """
     return pd.read_csv(filename)
 
+import numpy as np 
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
+
+def create_lstm_input(df, target_column='Adj Close', lookback=60):
+    X, y = [], []
+
+    for i in range(lookback, len(df)):
+        X.append(df[target_column].iloc[i-lookback:i].values)
+        y.append(df[target_column].iloc[i])
+
+    X, y = np.array(X), np.array(y)
+    X = X.reshape((X.shape[0], X.shape[1], 1))
+
+    return X, y
+
+def preprocess_data(df):
+    """
+    Preprocess the stock data by handling missing values and scaling the data.
+    
+    Args:
+    df: DataFrame, The raw stock data.
+    
+    Returns:
+    df: DataFrame, The preprocessed data.
+    """
+    df.fillna(method='ffill', inplace=True)
+
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    
+    columns_to_scale = ['Adj Close', 'Open', 'High', 'Low', 'Volume']
+    df[columns_to_scale] = scaler.fit_transform(df[columns_to_scale])
+
+    return df
 

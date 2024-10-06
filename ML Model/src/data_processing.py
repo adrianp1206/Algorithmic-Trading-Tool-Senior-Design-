@@ -82,8 +82,21 @@ def preprocess_data(df):
 
     scaler = MinMaxScaler(feature_range=(0, 1))
     
-    columns_to_scale = ['Adj Close', 'Open', 'High', 'Low', 'Volume']
-    df[columns_to_scale] = scaler.fit_transform(df[columns_to_scale])
+    df['Adj Close'] = scaler.fit_transform(df[['Adj Close']])
 
-    return df
+    return df, scaler
+
+def fetch_data_up_to_last_week(ticker='TSLA', start_date='2023-01-01', end_date='2024-09-27'):
+    """
+    Fetch stock data up to the date just before last week.
+    """
+    stock_data = yf.download(ticker, start=start_date, end=end_date)
+    return stock_data
+
+def fetch_last_week_data(ticker='TSLA', start_date='2024-09-30', end_date='2024-10-05'):
+    """
+    Fetch stock data for last week.
+    """
+    stock_data = yf.download(ticker, start=start_date, end=end_date)
+    return stock_data
 
